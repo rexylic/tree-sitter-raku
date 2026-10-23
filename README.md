@@ -55,12 +55,6 @@ npx tree-sitter parse examples/stress.raku
 
 ## Known limitations
 
-- `src/parser.c` is large
-  (about 100 MB, 17k states),
-  because the deep operator table multiplies with the many places an expression
-  can appear.
-  It compiles fine but slowly, and it's over GitHub's 100 MB file limit,
-  so regenerate it instead of committing it, or ship the compiled parser.
 - Raku's parser knows which names are subs and which are types.
   This grammar guesses: a bare word followed by a term is a listop call
   (`foo -1` is `foo(-1)`).
