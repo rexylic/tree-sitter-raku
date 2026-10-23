@@ -1,0 +1,23 @@
+{
+  "name": "tree-sitter-raku",
+  "version": "0.1.0",
+  "description": "Raku grammar for tree-sitter",
+  "main": "bindings/node",
+  "keywords": ["tree-sitter", "raku", "parser"],
+  "license": "MIT",
+  "devDependencies": {
+    "tree-sitter-cli": "^0.27.1"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.raku",
+      "file-types": ["raku", "rakumod", "rakutest", "rakudoc", "p6", "pm6", "pl6"],
+      "highlights": "queries/highlights.scm"
+    }
+  ]
+}

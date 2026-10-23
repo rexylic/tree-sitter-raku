@@ -1,0 +1,198 @@
+============================================================
+Variable declarations
+============================================================
+
+my $x = 1;
+my @a = 1, 2, 3;
+my Int %h;
+my ($a, $b) = 1, 2;
+my \s = 5;
+
+---
+
+(source_file
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (integer)))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (list_expression
+        (integer)
+        (integer)
+        (integer))))
+  (expression_statement
+    (variable_declaration
+      (scope)
+      (type
+        (identifier))
+      (variable)))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable)
+        (variable))
+      (list_expression
+        (integer)
+        (integer))))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (sigilless_variable))
+      (integer))))
+
+============================================================
+Class with attributes
+============================================================
+
+class Point is Shape does Role {
+    has Int $.x is rw = 0;
+    has $!secret;
+}
+
+---
+
+(source_file
+  (expression_statement
+    (package_declaration
+      (identifier)
+      (trait
+        (identifier))
+      (trait
+        (identifier))
+      (block
+        (expression_statement
+          (assignment
+            (variable_declaration
+              (scope)
+              (type
+                (identifier))
+              (variable)
+              (trait
+                (identifier)))
+            (integer)))
+        (expression_statement
+          (variable_declaration
+            (scope)
+            (variable)))))))
+
+============================================================
+Routines and signatures
+============================================================
+
+sub add(Int $a, Int $b = 2 --> Int) { $a + $b }
+multi method m(::?CLASS:D: *@rest, :$named!, |c) { }
+
+---
+
+(source_file
+  (expression_statement
+    (routine_declaration
+      (identifier)
+      (signature
+        (parameter_list
+          (parameter
+            (type
+              (identifier))
+            (variable))
+          (parameter
+            (type
+              (identifier))
+            (variable)
+            (integer)))
+        (type
+          (identifier)))
+      (block
+        (expression_statement
+          (binary_expression
+            (variable)
+            (variable))))))
+  (expression_statement
+    (routine_declaration
+      (multiplicity)
+      (identifier)
+      (signature
+        (parameter_list
+          (parameter
+            (type
+              (identifier)
+              (type_smiley)))
+          (parameter
+            (variable))
+          (parameter
+            (colon_variable))
+          (parameter
+            (identifier))))
+      (block))))
+
+============================================================
+Grammar with tokens
+============================================================
+
+grammar G {
+    token TOP { <word>+ % \s }
+    rule pair { <key> '=' <value> }
+}
+
+---
+
+(source_file
+  (expression_statement
+    (package_declaration
+      (identifier)
+      (block
+        (expression_statement
+          (regex_declaration
+            (identifier)
+            (regex_body)))
+        (expression_statement
+          (regex_declaration
+            (identifier)
+            (regex_body)))))))
+
+============================================================
+Unit, enum, subset, constant
+============================================================
+
+unit module Foo::Bar:ver<1.0>:auth<zef:me>;
+enum Color <red green>;
+subset Pos of Int where * > 0;
+constant PI2 = pi * 2;
+
+---
+
+(source_file
+  (unit_declaration
+    (identifier)
+    (name_adverb
+      (name)
+      (quote_words
+        (word)))
+    (name_adverb
+      (name)
+      (quote_words
+        (word))))
+  (enum_declaration
+    (identifier)
+    (quote_words
+      (word)
+      (word)))
+  (subset_declaration
+    (identifier)
+    (trait
+      (identifier))
+    (binary_expression
+      (whatever)
+      (integer)))
+  (constant_declaration
+    (identifier)
+    (binary_expression
+      (identifier)
+      (integer))))

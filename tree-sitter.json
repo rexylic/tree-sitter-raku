@@ -1,0 +1,40 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "raku",
+      "camelcase": "Raku",
+      "title": "Raku",
+      "scope": "source.raku",
+      "file-types": [
+        "raku",
+        "rakumod",
+        "rakutest",
+        "rakudoc",
+        "p6",
+        "pm6",
+        "pl6",
+        "t6"
+      ],
+      "injection-regex": "^(raku|perl6)$",
+      "highlights": "queries/highlights.scm",
+      "tags": "queries/tags.scm",
+      "injections": "queries/injections.scm",
+      "locals": "queries/locals.scm",
+      "class-name": "TreeSitterRaku"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Raku grammar for tree-sitter"
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "node": false,
+    "python": false,
+    "rust": false,
+    "swift": false
+  }
+}

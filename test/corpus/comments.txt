@@ -1,0 +1,50 @@
+============================================================
+Line and embedded comments
+============================================================
+
+# line
+say 1; #`( embedded ) say 2;
+#| doc
+sub f { }
+
+---
+
+(source_file
+  (comment)
+  (expression_statement
+    (listop_call
+      (identifier)
+      (integer)))
+  (comment)
+  (expression_statement
+    (listop_call
+      (identifier)
+      (integer)))
+  (comment)
+  (expression_statement
+    (routine_declaration
+      (identifier)
+      (block))))
+
+============================================================
+Pod blocks
+============================================================
+
+=begin pod
+=head1 NAME
+=end pod
+
+=head2 Short
+text
+
+say 1;
+
+---
+
+(source_file
+  (pod)
+  (pod)
+  (expression_statement
+    (listop_call
+      (identifier)
+      (integer))))

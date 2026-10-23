@@ -1,0 +1,230 @@
+============================================================
+If elsif else
+============================================================
+
+if $x > 1 {
+    say 'big';
+} elsif $x {
+    say 'some';
+} else {
+    say 'none';
+}
+
+---
+
+(source_file
+  (if_statement
+    (binary_expression
+      (variable)
+      (integer))
+    (block
+      (expression_statement
+        (listop_call
+          (identifier)
+          (string))))
+    (elsif_clause
+      (variable)
+      (block
+        (expression_statement
+          (listop_call
+            (identifier)
+            (string)))))
+    (else_clause
+      (block
+        (expression_statement
+          (listop_call
+            (identifier)
+            (string)))))))
+
+============================================================
+Loops
+============================================================
+
+for @a -> $x { next if $x %% 2 }
+while $i < 3 { $i++ }
+loop (my $j = 0; $j < 3; $j++) { }
+repeat { $i-- } until $i == 0;
+
+---
+
+(source_file
+  (for_statement
+    (variable)
+    (pointy_block
+      (parameter_list
+        (parameter
+          (variable)))
+      (block
+        (statement_modifier
+          (identifier)
+          (binary_expression
+            (variable)
+            (integer))))))
+  (while_statement
+    (binary_expression
+      (variable)
+      (integer))
+    (block
+      (expression_statement
+        (postfix_expression
+          (variable)
+          (operator)))))
+  (loop_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (integer))
+    (binary_expression
+      (variable)
+      (integer))
+    (postfix_expression
+      (variable)
+      (operator))
+    (block))
+  (repeat_statement
+    (block
+      (expression_statement
+        (postfix_expression
+          (variable)
+          (operator))))
+    (binary_expression
+      (variable)
+      (integer))))
+
+============================================================
+Given when
+============================================================
+
+given $x {
+    when Int { say 'int' }
+    default { say 'other' }
+}
+
+---
+
+(source_file
+  (given_statement
+    (variable)
+    (block
+      (when_statement
+        (identifier)
+        (block
+          (expression_statement
+            (listop_call
+              (identifier)
+              (string)))))
+      (default_statement
+        (block
+          (expression_statement
+            (listop_call
+              (identifier)
+              (string))))))))
+
+============================================================
+Statement modifiers
+============================================================
+
+say $_ for @a;
+return 1 unless $x;
+
+---
+
+(source_file
+  (statement_modifier
+    (listop_call
+      (identifier)
+      (variable))
+    (variable))
+  (statement_modifier
+    (listop_call
+      (identifier)
+      (integer))
+    (variable)))
+
+============================================================
+Block ends statement at newline
+============================================================
+
+$lock.protect: {
+    $x++;
+}
+say $x
+
+---
+
+(source_file
+  (expression_statement
+    (method_listop_call
+      (variable)
+      (identifier)
+      (block
+        (expression_statement
+          (postfix_expression
+            (variable)
+            (operator))))))
+  (expression_statement
+    (listop_call
+      (identifier)
+      (variable))))
+
+============================================================
+Phasers and prefixes
+============================================================
+
+BEGIN { say 'hi' }
+my $p = start { 42 };
+my @g = gather for ^3 { take $_ };
+
+---
+
+(source_file
+  (expression_statement
+    (phaser
+      (block
+        (expression_statement
+          (listop_call
+            (identifier)
+            (string))))))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (statement_prefix
+        (block
+          (expression_statement
+            (integer))))))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (statement_prefix
+        (for_statement
+          (unary_expression
+            (integer))
+          (block
+            (expression_statement
+              (listop_call
+                (identifier)
+                (variable)))))))))
+
+============================================================
+Labels
+============================================================
+
+OUTER: for @a { next OUTER }
+
+---
+
+(source_file
+  (labeled_statement
+    (label)
+    (for_statement
+      (variable)
+      (block
+        (expression_statement
+          (listop_call
+            (identifier)
+            (identifier)))))))

@@ -1,0 +1,275 @@
+============================================================
+Operator precedence
+============================================================
+
+say 1 + 2 * 3 ** 2;
+my $t = $a > $b ?? 'a' !! 'b';
+say 1 and say 2;
+
+---
+
+(source_file
+  (expression_statement
+    (listop_call
+      (identifier)
+      (binary_expression
+        (integer)
+        (binary_expression
+          (integer)
+          (binary_expression
+            (integer)
+            (integer))))))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (ternary_expression
+        (binary_expression
+          (variable)
+          (variable))
+        (string)
+        (string))))
+  (expression_statement
+    (binary_expression
+      (listop_call
+        (identifier)
+        (integer))
+      (listop_call
+        (identifier)
+        (integer)))))
+
+============================================================
+Method calls
+============================================================
+
+$obj.method(1).other;
+@list.map({ $_ * 2 }).grep(* > 2);
+$png.write: 'out.png';
+.say for @a;
+self!private;
+$x.^name;
+
+---
+
+(source_file
+  (expression_statement
+    (method_call
+      (method_call
+        (variable)
+        (identifier)
+        (argument_list
+          (integer)))
+      (identifier)))
+  (expression_statement
+    (method_call
+      (method_call
+        (variable)
+        (identifier)
+        (argument_list
+          (block
+            (expression_statement
+              (binary_expression
+                (variable)
+                (integer))))))
+      (identifier)
+      (argument_list
+        (binary_expression
+          (whatever)
+          (integer)))))
+  (expression_statement
+    (method_listop_call
+      (variable)
+      (identifier)
+      (string)))
+  (statement_modifier
+    (topic_method_call
+      (identifier))
+    (variable))
+  (expression_statement
+    (method_call
+      (self)
+      (identifier)))
+  (expression_statement
+    (method_call
+      (variable)
+      (identifier))))
+
+============================================================
+Subscripts
+============================================================
+
+@a[0];
+%h<key>;
+%h{'k'}:exists;
+@m[0;1];
+
+---
+
+(source_file
+  (expression_statement
+    (subscript
+      (variable)
+      (integer)))
+  (expression_statement
+    (subscript
+      (variable)
+      (word)))
+  (expression_statement
+    (subscript
+      (variable)
+      (string)
+      (adverb)))
+  (expression_statement
+    (subscript
+      (variable)
+      (integer)
+      (integer))))
+
+============================================================
+Listop calls
+============================================================
+
+say map &f, @list;
+foo(1, 2, );
+print 'x';
+
+---
+
+(source_file
+  (expression_statement
+    (listop_call
+      (identifier)
+      (listop_call
+        (identifier)
+        (list_expression
+          (variable)
+          (variable)))))
+  (expression_statement
+    (call_expression
+      (identifier)
+      (argument_list
+        (list_expression
+          (integer)
+          (integer)))))
+  (expression_statement
+    (listop_call
+      (identifier)
+      (string))))
+
+============================================================
+Ranges and sequences
+============================================================
+
+my @r = 1..10;
+my @s = 1, 2, 4 ... 64;
+my $sum = [+] @r;
+
+---
+
+(source_file
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (binary_expression
+        (integer)
+        (integer))))
+  (expression_statement
+    (binary_expression
+      (assignment
+        (variable_declaration
+          (scope)
+          (variable))
+        (list_expression
+          (integer)
+          (integer)
+          (integer)))
+      (integer)))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (reduce_expression
+        (reduce_operator)
+        (variable)))))
+
+============================================================
+Pointy blocks and closures
+============================================================
+
+my $f = -> $x, $y = 2 { $x + $y };
+my $g = sub ($n) { $n * 2 };
+
+---
+
+(source_file
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (pointy_block
+        (parameter_list
+          (parameter
+            (variable))
+          (parameter
+            (variable)
+            (integer)))
+        (block
+          (expression_statement
+            (binary_expression
+              (variable)
+              (variable)))))))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (routine_declaration
+        (signature
+          (parameter_list
+            (parameter
+              (variable))))
+        (block
+          (expression_statement
+            (binary_expression
+              (variable)
+              (integer))))))))
+
+============================================================
+Colonpairs
+============================================================
+
+f(:a, :!b, :c(3), :d<x y>, :$e);
+say :16<FF>;
+
+---
+
+(source_file
+  (expression_statement
+    (call_expression
+      (identifier)
+      (argument_list
+        (list_expression
+          (colonpair
+            (name))
+          (colonpair
+            (name))
+          (colonpair
+            (name)
+            (argument_list
+              (integer)))
+          (subscript
+            (colonpair
+              (name))
+            (word)
+            (word))
+          (colonpair
+            (colon_variable))))))
+  (expression_statement
+    (listop_call
+      (identifier)
+      (integer))))

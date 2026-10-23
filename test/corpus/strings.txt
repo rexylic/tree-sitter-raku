@@ -1,0 +1,177 @@
+============================================================
+Interpolation
+============================================================
+
+say "Hi $name, @list[0] %h<a> {1 + 1} $obj.method() done.";
+
+---
+
+(source_file
+  (expression_statement
+    (listop_call
+      (identifier)
+      (interpolated_string
+        (string_content)
+        (interpolation
+          (variable))
+        (string_content)
+        (interpolation
+          (variable)
+          (subscript
+            (integer)))
+        (string_content)
+        (interpolation
+          (variable)
+          (subscript
+            (word)))
+        (string_content)
+        (interpolation
+          (block
+            (expression_statement
+              (binary_expression
+                (integer)
+                (integer)))))
+        (string_content)
+        (interpolation
+          (variable)
+          (method_call
+            (identifier)
+            (argument_list)))
+        (string_content)))))
+
+============================================================
+Escapes and single quotes
+============================================================
+
+say "tab\tx \x[41]";
+say 'no $interp \' here';
+
+---
+
+(source_file
+  (expression_statement
+    (listop_call
+      (identifier)
+      (interpolated_string
+        (string_content)
+        (escape_sequence)
+        (string_content)
+        (escape_sequence))))
+  (expression_statement
+    (listop_call
+      (identifier)
+      (string))))
+
+============================================================
+Quoting constructs
+============================================================
+
+say q{a {b} c};
+say Q[raw];
+say qq«x $y »;
+say <a b c>;
+
+---
+
+(source_file
+  (expression_statement
+    (listop_call
+      (identifier)
+      (quoted
+        (quote_operator)
+        (string_content))))
+  (expression_statement
+    (listop_call
+      (identifier)
+      (quoted
+        (quote_operator)
+        (string_content))))
+  (expression_statement
+    (listop_call
+      (identifier)
+      (interpolated_string
+        (quote_operator)
+        (string_content)
+        (interpolation
+          (variable))
+        (string_content))))
+  (expression_statement
+    (listop_call
+      (identifier)
+      (quote_words
+        (word)
+        (word)
+        (word)))))
+
+============================================================
+Heredoc
+============================================================
+
+my $t = q:to/END/;
+    text
+    END
+say $t;
+
+---
+
+(source_file
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (heredoc
+        (quote_operator)
+        (adverb)
+        (heredoc_start))))
+  (heredoc_body)
+  (expression_statement
+    (listop_call
+      (identifier)
+      (variable))))
+
+============================================================
+Regexes
+============================================================
+
+if $s ~~ /foo(\d+)/ { say ~$0 }
+$s ~~ s:g/a/b/;
+my $r = rx:i{ abc };
+$s ~~ tr/a..z/A..Z/;
+
+---
+
+(source_file
+  (if_statement
+    (binary_expression
+      (variable)
+      (regex
+        (regex_body)))
+    (block
+      (expression_statement
+        (listop_call
+          (identifier)
+          (unary_expression
+            (variable))))))
+  (expression_statement
+    (binary_expression
+      (variable)
+      (substitution
+        (quote_operator)
+        (adverb)
+        (regex_body))))
+  (expression_statement
+    (assignment
+      (variable_declaration
+        (scope)
+        (variable))
+      (regex
+        (quote_operator)
+        (adverb)
+        (regex_body))))
+  (expression_statement
+    (binary_expression
+      (variable)
+      (substitution
+        (quote_operator)
+        (regex_body)))))
